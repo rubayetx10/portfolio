@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSE Knowledge Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#f7f5f2;--surface:#ffffff;--surface2:#fdf9f5;--surface3:#f0ede8;
+--text:#2c2a26;--text2:#6b6860;--text3:#a09e9a;
+--accent:#c4956a;--accent2:#e8c4a0;--accent3:#f5e8d8;
+--green:#7aad8a;--green-bg:#edf7f0;
+--blue:#7a9fc4;--blue-bg:#edf3f9;
+--rose:#c47a8a;--rose-bg:#faedf0;
+--purple:#9a7ac4;--purple-bg:#f3edf9;
+--amber:#c4a87a;--amber-bg:#f9f3ed;
+--teal:#7ac4b8;--teal-bg:#edf9f6;
+--border:#e8e2d9;--border2:#d4cec5;
+--shadow:0 2px 12px rgba(0,0,0,0.06);
+--radius:12px;--radius-sm:8px;--radius-lg:16px;
+}
+.dark{
+--bg:#1e1c1a;--surface:#272421;--surface2:#2f2c28;--surface3:#38342f;
+--text:#f0ece6;--text2:#b0aa9e;--text3:#706a60;
+--border:#3a3630;--border2:#4a4540;
+--shadow:0 2px 12px rgba(0,0,0,0.3);
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;font-size:14px;line-height:1.6;}
+.app{display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);padding:20px 0;display:flex;flex-direction:column;position:fixed;height:100vh;z-index:100;transition:background .3s;}
+.logo{padding:0 20px 20px;border-bottom:1px solid var(--border)}
+.logo-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:600;color:var(--accent);letter-spacing:-0.3px}
+.logo-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.nav{flex:1;padding:16px 0;overflow-y:auto}
+.nav-section{padding:0 12px;margin-bottom:8px}
+.nav-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:0 8px;margin-bottom:6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;transition:.2s;color:var(--text2);font-size:13px;font-weight:500;}
+.nav-item:hover{background:var(--surface3);color:var(--text)}
+.nav-item.active{background:var(--accent3);color:var(--accent);font-weight:600}
+.dark .nav-item.active{background:rgba(196,149,106,0.15);color:var(--accent)}
+.nav-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.sem-badge{margin-left:auto;font-size:10px;background:var(--surface3);color:var(--text3);padding:2px 7px;border-radius:20px;font-weight:600;}
+.nav-item.active .sem-badge{background:var(--accent);color:white}
+
+/* Main */
+.main{margin-left:220px;flex:1;min-height:100vh;display:flex;flex-direction:column;}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:50;transition:background .3s;}
+.page-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:600;letter-spacing:-0.3px;flex:1}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:24px;padding:7px 14px;}
+.search-box input{border:none;background:transparent;color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;outline:none;width:180px}
+.search-box input::placeholder{color:var(--text3)}
+.btn-icon{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:14px;color:var(--text2);transition:.2s;}
+.btn-icon:hover{background:var(--surface3);color:var(--text)}
+.content{padding:28px;flex:1}
+.page{display:none}
+.page.active{display:block}
+
+/* Dashboard */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;transition:.2s;}
+.stat-card:hover{box-shadow:var(--shadow)}
+.stat-icon{font-size:22px;margin-bottom:10px}
+.stat-num{font-family:'Sora',sans-serif;font-size:28px;font-weight:600;line-height:1}
+.stat-label{font-size:12px;color:var(--text3);margin-top:4px}
+.stat-card.c1{border-top:3px solid var(--green)}
+.stat-card.c2{border-top:3px solid var(--blue)}
+.stat-card.c3{border-top:3px solid var(--rose)}
+.stat-card.c4{border-top:3px solid var(--amber)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px}
+.card-title{font-size:13px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:16px}
+.note-item{padding:12px;border-radius:var(--radius-sm);background:var(--surface2);margin-bottom:8px;cursor:pointer;transition:.2s;border:1px solid transparent;}
+.note-item:hover{border-color:var(--border2);box-shadow:var(--shadow)}
+.note-item-title{font-weight:600;font-size:13px;margin-bottom:3px}
+.note-item-meta{font-size:11px;color:var(--text3)}
+.tag{display:inline-flex;align-items:center;background:var(--accent3);color:var(--accent);font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;margin:2px;cursor:pointer;transition:.2s;}
+.dark .tag{background:rgba(196,149,106,0.15);color:var(--accent2)}
+.tag:hover{opacity:.8}
+.sem-overview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.sem-ov{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;cursor:pointer;transition:.2s;}
+.sem-ov:hover{background:var(--accent3);border-color:var(--accent2)}
+.dark .sem-ov:hover{background:rgba(196,149,106,0.1)}
+.sem-ov-title{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px}
+.progress-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-fill-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:3px;transition:width .5s}
+.sem-ov-count{font-size:11px;color:var(--text3);margin-top:6px}
+
+/* Semester */
+.sem-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.subj-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.subj-tab{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--text2);background:var(--surface);transition:.2s;}
+.subj-tab:hover{border-color:var(--accent);color:var(--accent)}
+.subj-tab.active{background:var(--accent);color:white;border-color:var(--accent)}
+.subj-section{margin-bottom:24px}
+.subj-section-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+.subj-title{font-weight:700;font-size:14px}
+.subj-code{font-size:11px;color:var(--text3);margin-left:8px;font-weight:500}
+.notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;padding:12px;background:var(--surface2);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);}
+
+/* Note Card */
+.note-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;cursor:pointer;transition:.2s;position:relative;}
+.note-card:hover{box-shadow:var(--shadow);transform:translateY(-1px);border-color:var(--accent2)}
+.note-card-title{font-weight:700;font-size:13px;margin-bottom:6px}
+.note-card-preview{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.note-card-tags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:8px}
+.note-card-tag{font-size:10px;background:var(--accent3);color:var(--accent);padding:2px 7px;border-radius:10px;font-weight:600}
+.dark .note-card-tag{background:rgba(196,149,106,0.15);color:var(--accent2)}
+.note-card-meta{font-size:10px;color:var(--text3);margin-bottom:12px}
+.note-actions{position:absolute;top:10px;right:10px;display:none;gap:4px}
+.note-card:hover .note-actions{display:flex}
+.btn-sm{padding:4px 8px;border-radius:5px;font-size:11px;cursor:pointer;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-family:'Nunito',sans-serif;transition:.2s;}
+.btn-sm:hover{background:var(--accent3);border-color:var(--accent);color:var(--accent)}
+.btn-sm.danger:hover{background:var(--rose-bg);border-color:var(--rose);color:var(--rose)}
+.add-note-card{background:var(--surface2);border:2px dashed var(--border);border-radius:var(--radius-sm);padding:14px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--text3);font-size:13px;font-weight:500;min-height:80px;}
+.add-note-card:hover{border-color:var(--accent);color:var(--accent);background:var(--accent3)}
+
+/* Book Upload */
+.book-section{border-top:1px solid var(--border);padding-top:12px;margin-top:4px}
+.book-section-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.upload-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-sm);padding:10px;text-align:center;cursor:pointer;transition:.2s;background:var(--surface2);position:relative;}
+.upload-zone:hover{border-color:var(--accent);background:var(--accent3)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:16px;margin-bottom:2px}
+.upload-text{font-size:11px;color:var(--text2);font-weight:500}
+.upload-sub{font-size:10px;color:var(--text3);margin-top:1px}
+.book-list{margin-top:7px;display:flex;flex-direction:column;gap:5px}
+.book-item{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;}
+.book-type-badge{width:28px;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;font-family:'Sora',sans-serif;}
+.badge-pdf{background:#ffeaea;color:#c44a4a}
+.badge-img{background:#eaf3ff;color:#4a7ac4}
+.badge-epub{background:#f0eaff;color:#7a4ac4}
+.badge-docx{background:#eafff0;color:#4ac47a}
+.badge-other{background:var(--surface3);color:var(--text2)}
+.book-info{flex:1;min-width:0}
+.book-name{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.book-size{font-size:10px;color:var(--text3);margin-top:1px}
+.book-actions{display:flex;gap:4px;flex-shrink:0}
+.btn-xs{padding:3px 8px;border-radius:5px;font-size:10px;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text2);font-family:'Nunito',sans-serif;font-weight:600;transition:.2s;}
+.btn-xs:hover{background:var(--accent3);border-color:var(--accent);color:var(--accent)}
+.btn-xs.del:hover{background:var(--rose-bg);border-color:var(--rose);color:var(--rose)}
+.btn-xs.open-btn{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
+.upload-progress{margin-top:5px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;display:none}
+.upload-progress-fill{height:100%;background:var(--green);border-radius:2px;transition:width .3s}
+.upload-status{font-size:10px;color:var(--green);margin-top:4px;display:none;font-weight:600}
+.empty-books{text-align:center;padding:6px;color:var(--text3);font-size:10px}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:var(--radius-lg);width:620px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+.modal-header{padding:20px 24px 0;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:'Sora',sans-serif;font-size:17px;font-weight:600}
+.modal-body{padding:20px 24px 24px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block}
+.form-input,.form-select,.form-textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;outline:none;transition:.2s;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent3)}
+.form-textarea{min-height:200px;resize:vertical;font-size:13px;line-height:1.7}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+.btn{padding:9px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;transition:.2s;border:1px solid transparent;}
+.btn-primary{background:var(--accent);color:white;border-color:var(--accent)}
+.btn-primary:hover{opacity:.85}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--surface3)}
+.btn-add{background:var(--accent);color:white;border:none;border-radius:var(--radius-sm);padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:6px;transition:.2s;}
+.btn-add:hover{opacity:.85}
+
+/* Note View */
+.note-view-header{margin-bottom:24px}
+.note-view-title{font-family:'Sora',sans-serif;font-size:24px;font-weight:600;margin-bottom:8px}
+.note-view-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.3px;}
+.badge-sem{background:var(--blue-bg);color:var(--blue)}
+.badge-subj{background:var(--green-bg);color:var(--green)}
+.dark .badge-sem{background:rgba(122,159,196,0.15);color:var(--blue)}
+.dark .badge-subj{background:rgba(122,173,138,0.15);color:var(--green)}
+.note-content{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;line-height:1.9;}
+.note-content h1,.note-content h2,.note-content h3{font-family:'Sora',sans-serif;font-weight:600;color:var(--text);margin:20px 0 8px;}
+.note-content h2{font-size:18px;border-bottom:2px solid var(--accent3);padding-bottom:4px}
+.note-content h3{font-size:15px;color:var(--accent)}
+.note-content p{margin-bottom:10px;color:var(--text)}
+.note-content code{background:var(--surface3);color:var(--rose);padding:2px 6px;border-radius:4px;font-family:monospace;font-size:12px;}
+.note-content pre{background:var(--surface3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin:12px 0;overflow-x:auto;font-family:monospace;font-size:12px;line-height:1.7;}
+.note-content ul,.note-content ol{padding-left:20px;margin-bottom:10px}
+.note-content li{margin-bottom:4px;color:var(--text)}
+.note-content blockquote{border-left:3px solid var(--accent);padding-left:16px;color:var(--text2);font-style:italic;margin:12px 0;}
+.note-view-books{margin-top:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;}
+.note-view-books-title{font-size:13px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px}
+.note-view-upload-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-sm);padding:18px;text-align:center;cursor:pointer;transition:.2s;background:var(--surface2);position:relative;margin-bottom:12px;}
+.note-view-upload-zone:hover{border-color:var(--accent);background:var(--accent3)}
+.note-view-upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+
+/* Advanced */
+.adv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.adv-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;cursor:pointer;transition:.2s;}
+.adv-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.adv-card-icon{font-size:28px;margin-bottom:12px}
+.adv-card-title{font-family:'Sora',sans-serif;font-size:15px;font-weight:600;margin-bottom:6px}
+.adv-card-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+.adv-card-topics{display:flex;flex-wrap:wrap;gap:4px}
+.topic-chip{background:var(--surface3);color:var(--text2);font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600}
+.adv-card.algo{border-top:3px solid var(--blue)}
+.adv-card.sysdes{border-top:3px solid var(--green)}
+.adv-card.cp{border-top:3px solid var(--amber)}
+.adv-card.interview{border-top:3px solid var(--rose)}
+.adv-card.db{border-top:3px solid var(--purple)}
+.adv-card.networks{border-top:3px solid var(--teal)}
+.adv-detail{display:none}
+.adv-detail.open{display:block}
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius-sm);background:var(--surface2);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-size:13px;font-weight:600;margin-bottom:20px;transition:.2s;font-family:'Nunito',sans-serif;}
+.back-btn:hover{background:var(--surface3);color:var(--text)}
+.detail-section{margin-bottom:20px}
+.detail-section h3{font-size:14px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.detail-topics{display:flex;flex-wrap:wrap;gap:6px}
+.detail-topic{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:12px;padding:5px 12px;border-radius:20px;font-weight:500;}
+
+/* Search */
+.search-results-info{font-size:13px;color:var(--text3);margin-bottom:16px}
+.no-results{text-align:center;padding:60px 20px;color:var(--text3)}
+.no-results-icon{font-size:40px;margin-bottom:12px}
+.active-filter{display:inline-flex;align-items:center;gap:6px;background:var(--accent3);color:var(--accent);padding:5px 10px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:16px;}
+.active-filter span{cursor:pointer;font-size:16px;line-height:1}
+
+/* Copy Protection Toggle */
+.copy-protect-bar{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:8px 14px;margin-bottom:20px;
+}
+.copy-protect-bar label{font-size:12px;color:var(--text2);font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;user-select:none}
+.toggle-switch{position:relative;width:36px;height:20px;flex-shrink:0}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border2);border-radius:20px;transition:.3s;cursor:pointer}
+.toggle-slider:before{content:'';position:absolute;width:14px;height:14px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s}
+.toggle-switch input:checked+.toggle-slider{background:var(--accent)}
+.toggle-switch input:checked+.toggle-slider:before{transform:translateX(16px)}
+.copy-protect-info{font-size:11px;color:var(--text3);margin-left:auto}
+
+/* Footer */
+footer{
+  margin-left:220px;background:var(--surface);border-top:1px solid var(--border);
+  padding:16px 28px;display:flex;align-items:center;justify-content:space-between;
+}
+.footer-name{font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--accent)}
+.footer-copy{font-size:11px;color:var(--text3)}
+.footer-badge{font-size:11px;color:var(--text2);background:var(--surface2);border:1px solid var(--border);padding:4px 10px;border-radius:20px;}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="logo">
+    <div class="logo-title">📘 CSE Hub</div>
+    <div class="logo-sub">Knowledge Base</div>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">
+      <div class="nav-item active" onclick="navigate('dashboard')" id="nav-dashboard">
+        <div class="nav-icon">🏠</div> Dashboard
+      </div>
+      <div class="nav-item" onclick="navigate('search')" id="nav-search">
+        <div class="nav-icon">🔍</div> Search
+      </div>
+      <div class="nav-item" onclick="navigate('advanced')" id="nav-advanced">
+        <div class="nav-icon">⚡</div> Advanced CSE
+      </div>
+      <div class="nav-item" onclick="navigate('settings')" id="nav-settings">
+        <div class="nav-icon">⚙️</div> Settings
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Semesters</div>
+      <div id="sem-nav"></div>
+    </div>
+  </nav>
+</aside>
+
+<div style="display:flex;flex-direction:column;flex:1;margin-left:220px;min-height:100vh">
+<main style="flex:1">
+  <div class="topbar">
+    <div class="page-title" id="page-title">Dashboard</div>
+    <div class="search-box">
+      <span style="color:var(--text3);font-size:13px">🔍</span>
+      <input type="text" placeholder="Search notes..." id="global-search" oninput="globalSearch(this.value)">
+    </div>
+    <button class="btn-icon" onclick="toggleDark()" title="Toggle dark mode" id="dark-btn">🌙</button>
+  </div>
+
+  <div class="content">
+    <!-- Dashboard -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card c1"><div class="stat-icon">📝</div><div class="stat-num" id="s-notes">0</div><div class="stat-label">Total Notes</div></div>
+        <div class="stat-card c2"><div class="stat-icon">📚</div><div class="stat-num" id="s-subjects">0</div><div class="stat-label">Subjects</div></div>
+        <div class="stat-card c3"><div class="stat-icon">🎓</div><div class="stat-num">8</div><div class="stat-label">Semesters</div></div>
+        <div class="stat-card c4"><div class="stat-icon">🏷️</div><div class="stat-num" id="s-tags">0</div><div class="stat-label">Unique Tags</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Recent Notes</div>
+          <div id="recent-notes"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Tag Cloud</div>
+          <div id="tag-cloud" style="display:flex;flex-wrap:wrap;gap:6px;padding-top:4px"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">All Semesters Overview</div>
+        <div class="sem-overview-grid" id="sem-overview"></div>
+      </div>
+    </div>
+
+    <!-- Semester Pages -->
+    <div id="sem-pages"></div>
+
+    <!-- Advanced -->
+    <div class="page" id="page-advanced">
+      <div class="adv-grid" id="adv-grid"></div>
+      <div class="adv-detail" id="adv-detail">
+        <button class="back-btn" onclick="closeAdvDetail()">← Back</button>
+        <div id="adv-detail-content"></div>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="page" id="page-search">
+      <div id="active-tag-filter"></div>
+      <div class="search-results-info" id="search-info"></div>
+      <div id="search-results"></div>
+    </div>
+
+    <!-- Note View -->
+    <div class="page" id="page-note">
+      <button class="back-btn" onclick="closeNote()">← Back</button>
+      <div id="note-view-content"></div>
+    </div>
+
+    <!-- Settings -->
+    <div class="page" id="page-settings">
+      <div class="card" style="max-width:540px">
+        <div class="card-title">⚙️ Settings</div>
+        <div style="margin-bottom:24px">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px">🔒 Copy Protection</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.7">
+            Enable this to prevent others from copying your notes content. Right-click and keyboard shortcuts (Ctrl+C, Ctrl+A) will be disabled for note content. You can still copy from edit mode.
+          </div>
+          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm)">
+            <div class="toggle-switch">
+              <input type="checkbox" id="copy-protect-toggle" onchange="toggleCopyProtect(this.checked)">
+              <div class="toggle-slider"></div>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--text)" id="copy-protect-label">Copy Protection: OFF</div>
+              <div style="font-size:11px;color:var(--text3);margin-top:2px">Protect your notes from being copied</div>
+            </div>
+          </label>
+        </div>
+
+        <div style="margin-bottom:24px">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px">🌙 Theme</div>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-ghost" onclick="setTheme(false)" id="theme-light" style="flex:1">☀️ Light Mode</button>
+            <button class="btn btn-primary" onclick="setTheme(true)" id="theme-dark" style="flex:1">🌙 Dark Mode</button>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px">📊 Storage Info</div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px">
+            <div style="font-size:12px;color:var(--text2)">Notes stored in <strong>localStorage</strong></div>
+            <div style="font-size:12px;color:var(--text2);margin-top:4px">Books stored in <strong>IndexedDB</strong> (supports large files)</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:8px" id="storage-info">Calculating...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer style="background:var(--surface);border-top:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;">
+  <div>
+    <div style="font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--accent)">Rubayet Hoosain Robi</div>
+    <div style="font-size:11px;color:var(--text3);margin-top:2px">© 2024 CSE Knowledge Hub. All rights reserved.</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="copy-protect-footer" style="font-size:11px;color:var(--text3);background:var(--surface2);border:1px solid var(--border);padding:4px 10px;border-radius:20px;">🔓 Copy: ON</span>
+    <span style="font-size:11px;color:var(--text2);background:var(--surface2);border:1px solid var(--border);padding:4px 10px;border-radius:20px;">📘 CSE Hub v1.0</span>
+  </div>
+</footer>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Add Note</div>
+      <button class="btn-icon" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="note-id">
+      <div class="form-group">
+        <label class="form-label">Title</label>
+        <input class="form-input" id="note-title" placeholder="Note title...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Content (Markdown supported)</label>
+        <textarea class="form-textarea" id="note-content" placeholder="## Heading&#10;- Bullet point&#10;&#96;&#96;&#96;code block&#96;&#96;&#96;&#10;&#10;Your content here..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Semester</label>
+          <select class="form-select" id="note-sem" onchange="populateSubjects()">
+            <option value="">Select...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <select class="form-select" id="note-subj">
+            <option value="">Select...</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tags (comma separated)</label>
+        <input class="form-input" id="note-tags" placeholder="e.g. algorithm, sorting, important">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveNote()">Save Note</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SEMESTERS = [
+  {id:1,name:'1st Semester',subjects:[{code:'CSE101',name:'Intro to CS'},{code:'MATH101',name:'Calculus I'},{code:'PHY101',name:'Physics I'},{code:'ENG101',name:'English'}]},
+  {id:2,name:'2nd Semester',subjects:[{code:'CSE102',name:'OOP'},{code:'MATH102',name:'Calculus II'},{code:'PHY102',name:'Physics II'},{code:'CSE103',name:'Discrete Math'}]},
+  {id:3,name:'3rd Semester',subjects:[{code:'CSE201',name:'Data Structures'},{code:'CSE202',name:'Algorithms'},{code:'MATH201',name:'Linear Algebra'},{code:'CSE203',name:'Digital Logic'}]},
+  {id:4,name:'4th Semester',subjects:[{code:'CSE301',name:'OS'},{code:'CSE302',name:'Database Systems'},{code:'CSE303',name:'Theory of Computation'},{code:'MATH301',name:'Statistics'}]},
+  {id:5,name:'5th Semester',subjects:[{code:'CSE401',name:'Computer Networks'},{code:'CSE402',name:'Software Engineering'},{code:'CSE403',name:'Compiler Design'},{code:'CSE404',name:'Microprocessors'}]},
+  {id:6,name:'6th Semester',subjects:[{code:'CSE501',name:'Artificial Intelligence'},{code:'CSE502',name:'Computer Graphics'},{code:'CSE503',name:'Information Security'},{code:'CSE504',name:'Web Engineering'}]},
+  {id:7,name:'7th Semester',subjects:[{code:'CSE601',name:'Machine Learning'},{code:'CSE602',name:'Distributed Systems'},{code:'CSE603',name:'Cloud Computing'},{code:'CSE604',name:'Mobile Dev'}]},
+  {id:8,name:'8th Semester',subjects:[{code:'CSE701',name:'Deep Learning'},{code:'CSE702',name:'Big Data'},{code:'CSE703',name:'Research Project'},{code:'CSE704',name:'Capstone'}]},
+];
+
+const ADV_SECTIONS = [
+  {id:'algo',cls:'algo',icon:'⚙️',title:'Algorithms',desc:'Master algorithmic thinking from basics to advanced.',topics:['Sorting Algorithms','Graph BFS/DFS','Dynamic Programming','Greedy Algorithms','Divide & Conquer','Backtracking','String Algorithms','NP Problems'],content:'Algorithms are the backbone of CS. Start with time complexity analysis, then move through fundamental sorting and searching.\n\n## Key Topics\n\n- **Sorting**: Merge sort O(n log n), Quick sort average O(n log n)\n- **Graphs**: BFS uses queue, DFS uses stack/recursion\n- **DP**: Optimal substructure + overlapping subproblems\n- **Greedy**: Local optimal → Global optimal\n\n```python\ndef binary_search(arr, target):\n    left, right = 0, len(arr)-1\n    while left <= right:\n        mid = (left+right)//2\n        if arr[mid] == target: return mid\n        elif arr[mid] < target: left = mid+1\n        else: right = mid-1\n    return -1\n```'},
+  {id:'sysdes',cls:'sysdes',icon:'🏗️',title:'System Design',desc:'Design scalable, reliable distributed systems.',topics:['Load Balancing','Caching Strategies','Database Sharding','Microservices','Message Queues','CDN','API Design','Consistency Models'],content:'## System Design Fundamentals\n\nSystem design interviews test your ability to architect large-scale systems.\n\n## CAP Theorem\n\n> A distributed system can only guarantee 2 of 3: Consistency, Availability, Partition Tolerance.\n\n## Key Concepts\n\n- **Horizontal scaling**: Add more servers\n- **Vertical scaling**: Upgrade existing server\n- **Load balancer**: Distributes traffic (Round Robin, Least Connections)\n- **Cache**: Redis for in-memory, CDN for static assets\n- **Database sharding**: Split data across multiple DBs'},
+  {id:'cp',cls:'cp',icon:'🏆',title:'Competitive Programming',desc:'Level up your competitive programming skills.',topics:['Number Theory','Segment Trees','Fenwick Tree','Flow Algorithms','Geometry','String Matching','Game Theory','Advanced DP'],content:'## Competitive Programming Path\n\nPractice on Codeforces, LeetCode, and AtCoder daily.\n\n## Must-Know Patterns\n\n- **Two Pointers**: O(n) for sorted array problems\n- **Sliding Window**: Substring/subarray problems\n- **Binary Search on Answer**: Minimize/maximize problems\n- **Union-Find**: Connected components\n\n```cpp\n// Fast I/O template\nios_base::sync_with_stdio(false);\ncin.tie(NULL);\n```'},
+  {id:'interview',cls:'interview',icon:'💼',title:'Interview Prep',desc:'Crack FAANG interviews with focused preparation.',topics:['Array & Hashing','Two Pointers','Sliding Window','Trees & BST','Heaps','Tries','Advanced Graphs','Bit Manipulation'],content:'## Interview Strategy\n\nTech interviews have predictable patterns. Master these LeetCode categories:\n\n## Roadmap\n\n1. **Arrays & Hashing** — Two Sum, Group Anagrams\n2. **Two Pointers** — Valid Palindrome, 3Sum\n3. **Sliding Window** — Longest Substring\n4. **Trees** — Inorder, Level Order traversal\n5. **Dynamic Programming** — Climbing Stairs, Coin Change\n\n> Always explain your thought process before coding!'},
+  {id:'db',cls:'db',icon:'🗄️',title:'Database Systems',desc:'Deep dive into relational and NoSQL databases.',topics:['SQL Joins','Indexes & B-Trees','Transactions ACID','Query Optimization','NoSQL Types','Redis','MongoDB','PostgreSQL'],content:'## Database Fundamentals\n\n## ACID Properties\n\n- **Atomicity**: All or nothing\n- **Consistency**: Data remains valid\n- **Isolation**: Transactions don\'t interfere\n- **Durability**: Committed data persists\n\n## Index Types\n\n- **B-Tree**: Default, good for range queries\n- **Hash**: Exact lookups only\n- **Bitmap**: Low cardinality columns\n\n```sql\nEXPLAIN ANALYZE SELECT * FROM orders\nWHERE customer_id = 123;\n```'},
+  {id:'networks',cls:'networks',icon:'🌐',title:'Computer Networks',desc:'From physical layer to application protocols.',topics:['TCP/IP Stack','HTTP/HTTPS','DNS Resolution','TLS/SSL','Socket Programming','Subnetting','Routing Protocols','WebSockets'],content:'## Network Layers (TCP/IP)\n\n1. **Application** — HTTP, DNS, SMTP\n2. **Transport** — TCP (reliable), UDP (fast)\n3. **Internet** — IP, ICMP, routing\n4. **Network Access** — Ethernet, WiFi\n\n## TCP vs UDP\n\n| Feature | TCP | UDP |\n|---------|-----|-----|\n| Reliable | ✓ | ✗ |\n| Ordered | ✓ | ✗ |\n| Speed | Slower | Faster |\n| Use case | HTTP, FTP | Video, Games |\n\n## DNS Resolution\n\n> Browser → Recursive Resolver → Root NS → TLD NS → Authoritative NS → IP'},
+];
+
+let notes = [];
+let currentPage = 'dashboard';
+let prevPage = 'dashboard';
+let editingId = null;
+let activeTagFilter = null;
+let currentSemPage = null;
+let currentSubjFilter = {};
+let isDark = false;
+let copyProtect = false;
+let db;
+
+/* ── IndexedDB ── */
+function initDB(){
+  const req = indexedDB.open('CSEHubBooks', 1);
+  req.onupgradeneeded = e => {
+    const d = e.target.result;
+    if(!d.objectStoreNames.contains('books')){
+      const s = d.createObjectStore('books',{keyPath:'id',autoIncrement:true});
+      s.createIndex('noteId','noteId',{unique:false});
+    }
+  };
+  req.onsuccess = e => {
+    db = e.target.result;
+    if(currentSemPage) notes.filter(n=>n.sem===currentSemPage).forEach(n=>loadBooks(n.id));
+  };
+  req.onerror = () => console.warn('IndexedDB not available');
+}
+
+function triggerUpload(noteId){
+  const el = document.getElementById('file-'+noteId);
+  if(el) el.click();
+}
+
+function handleUpload(noteId, input){
+  const files = Array.from(input.files);
+  if(!files.length||!db) return;
+  const prog = document.getElementById('prog-'+noteId);
+  const fill = document.getElementById('progfill-'+noteId);
+  const status = document.getElementById('status-'+noteId);
+  if(prog) prog.style.display='block';
+  if(status) status.style.display='none';
+  let done=0;
+  files.forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = e=>{
+      const record={noteId,name:file.name,type:file.type,size:file.size,data:e.target.result,date:new Date().toISOString()};
+      const tx=db.transaction('books','readwrite');
+      tx.objectStore('books').add(record).onsuccess=()=>{
+        done++;
+        if(fill) fill.style.width=Math.round((done/files.length)*100)+'%';
+        if(done===files.length){
+          setTimeout(()=>{
+            if(prog) prog.style.display='none';
+            if(fill) fill.style.width='0%';
+            if(status){status.style.display='block';setTimeout(()=>status.style.display='none',2000);}
+            loadBooks(noteId);
+          },400);
+        }
+      };
+    };
+    reader.readAsArrayBuffer(file);
+  });
+  input.value='';
+}
+
+function loadBooks(noteId){
+  if(!db) return;
+  const tx=db.transaction('books','readonly');
+  tx.objectStore('books').index('noteId').getAll(noteId).onsuccess=e=>{
+    renderBooks(noteId,e.target.result);
+  };
+}
+
+function getTypeBadge(type,name){
+  const ext=name.split('.').pop().toLowerCase();
+  if(type.includes('pdf')||ext==='pdf') return {cls:'badge-pdf',label:'PDF'};
+  if(type.includes('image')||['jpg','jpeg','png','gif','webp'].includes(ext)) return {cls:'badge-img',label:'IMG'};
+  if(ext==='epub') return {cls:'badge-epub',label:'EPUB'};
+  if(['docx','doc'].includes(ext)) return {cls:'badge-docx',label:'DOC'};
+  if(ext==='pptx') return {cls:'badge-other',label:'PPT'};
+  return {cls:'badge-other',label:ext.toUpperCase().slice(0,4)||'FILE'};
+}
+
+function fmtSize(bytes){
+  if(bytes<1024) return bytes+'B';
+  if(bytes<1024*1024) return Math.round(bytes/1024)+'KB';
+  return (bytes/(1024*1024)).toFixed(1)+'MB';
+}
+
+function renderBooks(noteId,books){
+  const el=document.getElementById('books-'+noteId);
+  if(!el) return;
+  if(!books||!books.length){
+    el.innerHTML='<div class="empty-books">No books attached yet</div>';
+    return;
+  }
+  el.innerHTML=books.map(b=>{
+    const badge=getTypeBadge(b.type,b.name);
+    return `<div class="book-item">
+      <div class="book-type-badge ${badge.cls}">${badge.label}</div>
+      <div class="book-info">
+        <div class="book-name" title="${b.name}">${b.name}</div>
+        <div class="book-size">${fmtSize(b.size)} · ${b.date.slice(0,10)}</div>
+      </div>
+      <div class="book-actions">
+        <button class="btn-xs open-btn" onclick="openBook(${b.id})">Open</button>
+        <button class="btn-xs del" onclick="deleteBook(${b.id},'${noteId}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openBook(id){
+  if(!db) return;
+  const tx=db.transaction('books','readonly');
+  tx.objectStore('books').get(id).onsuccess=e=>{
+    const b=e.target.result;
+    const blob=new Blob([b.data],{type:b.type||'application/octet-stream'});
+    const url=URL.createObjectURL(blob);
+    window.open(url,'_blank');
+    setTimeout(()=>URL.revokeObjectURL(url),5000);
+  };
+}
+
+function deleteBook(id,noteId){
+  if(!confirm('Remove this file?')||!db) return;
+  const tx=db.transaction('books','readwrite');
+  tx.objectStore('books').delete(id).onsuccess=()=>loadBooks(noteId);
+}
+
+/* ── Book section HTML ── */
+function bookSectionHTML(noteId){
+  return `<div class="book-section" onclick="event.stopPropagation()">
+    <div class="book-section-label">📎 Attached Books / Files</div>
+    <div class="upload-zone" onclick="triggerUpload('${noteId}')">
+      <input type="file" id="file-${noteId}" multiple
+        accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.epub,.docx,.doc,.pptx,.txt,.zip,.rar"
+        onchange="handleUpload('${noteId}',this)">
+      <div class="upload-icon">📂</div>
+      <div class="upload-text">Click to upload</div>
+      <div class="upload-sub">PDF · Image · EPUB · DOCX · any format</div>
+    </div>
+    <div class="upload-progress" id="prog-${noteId}">
+      <div class="upload-progress-fill" id="progfill-${noteId}" style="width:0%"></div>
+    </div>
+    <div class="upload-status" id="status-${noteId}">✓ Saved to IndexedDB!</div>
+    <div class="book-list" id="books-${noteId}"></div>
+  </div>`;
+}
+
+/* ── Note Card ── */
+function noteCard(n){
+  const preview = n.content.replace(/#+\s/g,'').replace(/\*\*/g,'').replace(/`{1,3}/g,'').replace(/\[.*?\]\(.*?\)/g,'').substring(0,120);
+  const tagsHtml = n.tags.map(t=>`<span class="note-card-tag">${t}</span>`).join('');
+  return `<div class="note-card" onclick="viewNote('${n.id}')">
+    <div class="note-actions">
+      <button class="btn-sm" onclick="event.stopPropagation();editNote('${n.id}')">Edit</button>
+      <button class="btn-sm danger" onclick="event.stopPropagation();deleteNote('${n.id}')">Del</button>
+    </div>
+    <div class="note-card-title">${n.title}</div>
+    <div class="note-card-preview">${preview}</div>
+    <div class="note-card-tags">${tagsHtml}</div>
+    <div class="note-card-meta">${n.date}</div>
+    ${bookSectionHTML(n.id)}
+  </div>`;
+}
+
+/* ── Notes storage ── */
+function loadNotes(){
+  const saved = localStorage.getItem('cse-notes');
+  if(saved) notes = JSON.parse(saved);
+  else{
+    notes=[
+      {id:'n1',title:'Big-O Complexity Cheat Sheet',content:'## Time Complexity Overview\n\n- **O(1)** – Constant: Hash table lookup\n- **O(log n)** – Logarithmic: Binary search\n- **O(n)** – Linear: Array traversal\n- **O(n log n)** – Linearithmic: Merge sort, Quick sort\n- **O(n²)** – Quadratic: Bubble sort, Selection sort\n\n## Space Complexity\n\nAlways analyze both time AND space.\n\n```python\ndef binary_search(arr, target):\n    left, right = 0, len(arr)-1\n    while left <= right:\n        mid = (left+right)//2\n        if arr[mid] == target: return mid\n        elif arr[mid] < target: left = mid+1\n        else: right = mid-1\n    return -1\n```',sem:3,subj:'CSE202',tags:['algorithm','complexity','must-know'],date:'2024-12-10'},
+      {id:'n2',title:'SQL Joins Reference Guide',content:'## Types of SQL Joins\n\n### INNER JOIN\nReturns rows with matching values in both tables.\n\n```sql\nSELECT s.name, e.grade\nFROM students s\nINNER JOIN enrollments e ON s.id = e.student_id;\n```\n\n### LEFT JOIN\nAll rows from left table + matched rows from right.\n\n### Key Concepts\n- Primary Key uniquely identifies each row\n- Foreign Key creates relationships between tables\n- Indexes speed up JOIN operations dramatically',sem:4,subj:'CSE302',tags:['sql','database','joins'],date:'2024-12-08'},
+      {id:'n3',title:'Process Scheduling Algorithms',content:'## OS Scheduling Algorithms\n\n### FCFS – First Come First Served\nSimplest algorithm. Non-preemptive. Can cause convoy effect.\n\n### Round Robin\n- Each process gets a time quantum\n- Preemptive — good for time-sharing systems\n\n### Priority Scheduling\nHigher priority runs first. Can cause **starvation** — solved by **aging**.\n\n> **Key formula:** Average Waiting Time = Sum of waiting times / Number of processes',sem:4,subj:'CSE301',tags:['OS','scheduling','process'],date:'2024-12-05'},
+      {id:'n4',title:'TCP Three-Way Handshake',content:'## How TCP Connection Establishes\n\n1. **SYN** – Client sends SYN with sequence number X\n2. **SYN-ACK** – Server responds, ACK=X+1, SEQ=Y\n3. **ACK** – Client sends ACK=Y+1. Connected!\n\n## Why TCP?\n- **Reliability** – Guarantees delivery\n- **Ordering** – Packets arrive in order\n- **Flow Control** – Sliding window\n\n> UDP is faster but unreliable — use for video streaming.',sem:5,subj:'CSE401',tags:['networking','TCP','protocol'],date:'2024-12-03'},
+      {id:'n5',title:'React Hooks Quick Reference',content:'## Essential React Hooks\n\n### useState\n```javascript\nconst [count, setCount] = useState(0);\n```\n\n### useEffect\n```javascript\nuseEffect(() => {\n  fetchData();\n  return () => cleanup();\n}, [dependency]);\n```\n\n### useCallback & useMemo\n- `useCallback` – Memoizes functions\n- `useMemo` – Memoizes computed values',sem:6,subj:'CSE504',tags:['react','javascript','frontend'],date:'2024-12-01'},
+    ];
+    saveNotes();
+  }
+}
+
+function saveNotes(){localStorage.setItem('cse-notes',JSON.stringify(notes))}
+
+/* ── Build UI ── */
+function buildSemNav(){
+  const el = document.getElementById('sem-nav');
+  el.innerHTML = SEMESTERS.map(s=>`
+    <div class="nav-item" onclick="navigate('sem${s.id}')" id="nav-sem${s.id}">
+      <div class="nav-icon">📖</div>${s.id}${ord(s.id)} Sem
+      <span class="sem-badge" id="badge-sem${s.id}">0</span>
+    </div>`).join('');
+}
+
+function ord(n){return['st','nd','rd','th','th','th','th','th'][n-1]}
+
+function buildSemPages(){
+  const el = document.getElementById('sem-pages');
+  el.innerHTML = SEMESTERS.map(s=>`
+    <div class="page" id="page-sem${s.id}">
+      <div class="sem-header">
+        <div>
+          <h2 style="font-family:'Sora',sans-serif;font-size:20px;font-weight:600">${s.name}</h2>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px">${s.subjects.length} subjects</div>
+        </div>
+        <button class="btn-add" onclick="openModal(${s.id})">+ Add Note</button>
+      </div>
+      <div class="subj-tabs" id="tabs-sem${s.id}">
+        <div class="subj-tab active" onclick="filterSubj(${s.id},'all',this)">All</div>
+        ${s.subjects.map(sub=>`<div class="subj-tab" onclick="filterSubj(${s.id},'${sub.code}',this)">${sub.name}</div>`).join('')}
+      </div>
+      <div id="sections-sem${s.id}"></div>
+    </div>`).join('');
+}
+
+function buildAdvanced(){
+  const el = document.getElementById('adv-grid');
+  el.innerHTML = ADV_SECTIONS.map(a=>`
+    <div class="adv-card ${a.cls}" onclick="openAdvDetail('${a.id}')">
+      <div class="adv-card-icon">${a.icon}</div>
+      <div class="adv-card-title">${a.title}</div>
+      <div class="adv-card-desc">${a.desc}</div>
+      <div class="adv-card-topics">${a.topics.slice(0,4).map(t=>`<span class="topic-chip">${t}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+function openAdvDetail(id){
+  const a = ADV_SECTIONS.find(x=>x.id===id);
+  document.getElementById('adv-grid').style.display='none';
+  const det = document.getElementById('adv-detail');
+  det.classList.add('open');
+  document.getElementById('adv-detail-content').innerHTML=`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <span style="font-size:36px">${a.icon}</span>
+      <div>
+        <h2 style="font-family:'Sora',sans-serif;font-size:22px;font-weight:600">${a.title}</h2>
+        <p style="color:var(--text2);font-size:13px;margin-top:3px">${a.desc}</p>
+      </div>
+    </div>
+    <div class="note-content" style="margin-bottom:20px">${renderMd(a.content)}</div>
+    <div class="detail-section">
+      <h3>Topics to Master</h3>
+      <div class="detail-topics">${a.topics.map(t=>`<span class="detail-topic">${t}</span>`).join('')}</div>
+    </div>`;
+}
+
+function closeAdvDetail(){
+  document.getElementById('adv-grid').style.display='grid';
+  document.getElementById('adv-detail').classList.remove('open');
+}
+
+/* ── Navigation ── */
+function navigate(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const pg = document.getElementById('page-'+page);
+  if(pg) pg.classList.add('active');
+  const nav = document.getElementById('nav-'+page);
+  if(nav) nav.classList.add('active');
+  currentPage = page;
+  if(page.startsWith('sem')){
+    const sid = parseInt(page.replace('sem',''));
+    currentSemPage = sid;
+    document.getElementById('page-title').textContent = SEMESTERS[sid-1].name;
+    renderSemPage(sid);
+    const navEl = document.getElementById('nav-sem'+sid);
+    if(navEl) navEl.classList.add('active');
+  } else if(page==='dashboard'){
+    document.getElementById('page-title').textContent='Dashboard';
+    refreshDashboard();
+  } else if(page==='advanced'){
+    document.getElementById('page-title').textContent='Advanced CSE';
+    document.getElementById('adv-grid').style.display='grid';
+    document.getElementById('adv-detail').classList.remove('open');
+  } else if(page==='search'){
+    document.getElementById('page-title').textContent='Search & Filter';
+    renderSearch('');
+  } else if(page==='settings'){
+    document.getElementById('page-title').textContent='Settings';
+    updateStorageInfo();
+  }
+  if(page!=='note') prevPage=page;
+}
+
+/* ── Semester Render ── */
+function renderSemPage(sid){
+  const sem = SEMESTERS[sid-1];
+  const filter = currentSubjFilter[sid]||'all';
+  const el = document.getElementById('sections-sem'+sid);
+  const subjs = filter==='all' ? sem.subjects : sem.subjects.filter(s=>s.code===filter);
+  el.innerHTML = subjs.map(sub=>{
+    const subNotes = notes.filter(n=>n.sem===sid&&n.subj===sub.code);
+    return `<div class="subj-section" id="sec-${sub.code}">
+      <div class="subj-section-header">
+        <div><span class="subj-title">${sub.name}</span><span class="subj-code">${sub.code}</span></div>
+        <button class="btn-sm" onclick="openModal(${sid},'${sub.code}')">+ Note</button>
+      </div>
+      <div class="notes-grid">
+        ${subNotes.map(n=>noteCard(n)).join('')}
+        <div class="add-note-card" onclick="openModal(${sid},'${sub.code}')">
+          <span>＋</span> Add Note
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  notes.filter(n=>n.sem===sid).forEach(n=>loadBooks(n.id));
+}
+
+function filterSubj(sid,code,el){
+  currentSubjFilter[sid]=code;
+  document.querySelectorAll(`#tabs-sem${sid} .subj-tab`).forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderSemPage(sid);
+}
+
+/* ── Dashboard ── */
+function refreshDashboard(){
+  const allTags=[...new Set(notes.flatMap(n=>n.tags))];
+  const allSubjs=[...new Set(notes.map(n=>n.subj))];
+  document.getElementById('s-notes').textContent=notes.length;
+  document.getElementById('s-subjects').textContent=allSubjs.length;
+  document.getElementById('s-tags').textContent=allTags.length;
+  const recent=[...notes].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  document.getElementById('recent-notes').innerHTML=recent.length?
+    recent.map(n=>`<div class="note-item" onclick="viewNote('${n.id}')">
+      <div class="note-item-title">${n.title}</div>
+      <div class="note-item-meta">${SEMESTERS[n.sem-1]?.name||''} · ${n.subj} · ${n.date}</div>
+    </div>`).join(''):
+    '<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">No notes yet!</div>';
+  document.getElementById('tag-cloud').innerHTML=allTags.map(t=>`<span class="tag" onclick="filterByTag('${t}')">#${t}</span>`).join('');
+  document.getElementById('sem-overview').innerHTML=SEMESTERS.map(s=>{
+    const cnt=notes.filter(n=>n.sem===s.id).length;
+    const pct=Math.min(100,cnt*10);
+    return `<div class="sem-ov" onclick="navigate('sem${s.id}')">
+      <div class="sem-ov-title">${s.id}${ord(s.id)} Sem</div>
+      <div class="progress-bar"><div class="progress-fill-bar" style="width:${pct}%"></div></div>
+      <div class="sem-ov-count">${cnt} notes · ${s.subjects.length} subjects</div>
+    </div>`;
+  }).join('');
+  SEMESTERS.forEach(s=>{
+    const b=document.getElementById('badge-sem'+s.id);
+    if(b) b.textContent=notes.filter(n=>n.sem===s.id).length;
+  });
+}
+
+function refreshAll(){
+  refreshDashboard();
+  if(currentSemPage) renderSemPage(currentSemPage);
+}
+
+/* ── Note View ── */
+function viewNote(id){
+  const n=notes.find(x=>x.id===id);
+  if(!n) return;
+  const sem=SEMESTERS[n.sem-1];
+  const subj=sem.subjects.find(s=>s.code===n.subj);
+  document.getElementById('note-view-content').innerHTML=`
+    <div class="note-view-header">
+      <div class="note-view-title">${n.title}</div>
+      <div class="note-view-meta">
+        <span class="badge badge-sem">${sem.name}</span>
+        <span class="badge badge-subj">${subj?subj.name:n.subj}</span>
+        ${n.tags.map(t=>`<span class="tag" onclick="filterByTag('${t}')">#${t}</span>`).join('')}
+        <span style="font-size:11px;color:var(--text3);margin-left:4px">${n.date}</span>
+      </div>
+    </div>
+    <div class="note-content no-select">${renderMd(n.content)}</div>
+    <div style="display:flex;gap:10px;margin-top:16px;margin-bottom:24px">
+      <button class="btn btn-primary" onclick="editNote('${n.id}')">Edit Note</button>
+      <button class="btn btn-ghost" style="color:var(--rose)" onclick="deleteNote('${n.id}')">Delete</button>
+    </div>
+    <div class="note-view-books">
+      <div class="note-view-books-title">📎 Attached Books / Files</div>
+      <div class="note-view-upload-zone" onclick="triggerUpload('view-${n.id}')">
+        <input type="file" id="file-view-${n.id}" multiple
+          accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.epub,.docx,.doc,.pptx,.txt,.zip"
+          onchange="handleUpload('${n.id}',this)">
+        <div style="font-size:20px;margin-bottom:6px">📂</div>
+        <div style="font-size:13px;color:var(--text2);font-weight:500">Click to upload books or files</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px">PDF · Image · EPUB · DOCX · PPT · any format</div>
+      </div>
+      <div class="upload-progress" id="prog-${n.id}" style="margin-top:8px">
+        <div class="upload-progress-fill" id="progfill-${n.id}" style="width:0%"></div>
+      </div>
+      <div class="upload-status" id="status-${n.id}">✓ Saved!</div>
+      <div class="book-list" id="books-${n.id}" style="margin-top:10px"></div>
+    </div>`;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-note').classList.add('active');
+  document.getElementById('page-title').textContent=n.title;
+  currentPage='note';
+  setTimeout(()=>loadBooks(n.id),100);
+}
+
+function closeNote(){navigate(prevPage)}
+
+/* ── Markdown ── */
+function renderMd(md){
+  return md
+    .replace(/```(\w*)\n?([\s\S]*?)```/g,(m,lang,code)=>`<pre><code>${escHtml(code.trim())}</code></pre>`)
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
+    .replace(/^# (.+)$/gm,'<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g,m=>`<ul>${m}</ul>`)
+    .replace(/^\d+\. (.+)$/gm,'<li>$1</li>')
+    .replace(/\n\n/g,'</p><p>')
+    .replace(/^(?!<[hupb]|<li|<pre|<block)(.+)$/gm,'<p>$1</p>');
+}
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+/* ── Modal ── */
+function populateSemSelect(){
+  const el=document.getElementById('note-sem');
+  el.innerHTML='<option value="">Select Semester...</option>'+
+    SEMESTERS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+}
+
+function populateSubjects(){
+  const sid=parseInt(document.getElementById('note-sem').value);
+  const el=document.getElementById('note-subj');
+  if(!sid){el.innerHTML='<option value="">Select Subject...</option>';return;}
+  el.innerHTML='<option value="">Select Subject...</option>'+
+    SEMESTERS[sid-1].subjects.map(s=>`<option value="${s.code}">${s.name} (${s.code})</option>`).join('');
+}
+
+function openModal(sem,subj){
+  editingId=null;
+  document.getElementById('modal-title').textContent='Add Note';
+  document.getElementById('note-id').value='';
+  document.getElementById('note-title').value='';
+  document.getElementById('note-content').value='';
+  document.getElementById('note-tags').value='';
+  document.getElementById('note-sem').value=sem||'';
+  populateSubjects();
+  if(subj) setTimeout(()=>document.getElementById('note-subj').value=subj,10);
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function editNote(id){
+  const n=notes.find(x=>x.id===id);
+  if(!n) return;
+  editingId=id;
+  document.getElementById('modal-title').textContent='Edit Note';
+  document.getElementById('note-id').value=id;
+  document.getElementById('note-title').value=n.title;
+  document.getElementById('note-content').value=n.content;
+  document.getElementById('note-tags').value=n.tags.join(', ');
+  document.getElementById('note-sem').value=n.sem;
+  populateSubjects();
+  setTimeout(()=>document.getElementById('note-subj').value=n.subj,10);
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e){
+  if(e&&e.target!==document.getElementById('modal-overlay')) return;
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function saveNote(){
+  const title=document.getElementById('note-title').value.trim();
+  const content=document.getElementById('note-content').value.trim();
+  const sem=parseInt(document.getElementById('note-sem').value);
+  const subj=document.getElementById('note-subj').value;
+  const tags=document.getElementById('note-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  if(!title||!content||!sem||!subj){alert('Please fill all required fields!');return;}
+  const date=new Date().toISOString().split('T')[0];
+  if(editingId){
+    const idx=notes.findIndex(n=>n.id===editingId);
+    notes[idx]={...notes[idx],title,content,sem,subj,tags,date};
+  } else {
+    notes.unshift({id:'n'+Date.now(),title,content,sem,subj,tags,date});
+  }
+  saveNotes();
+  refreshAll();
+  document.getElementById('modal-overlay').classList.remove('open');
+  if(editingId&&currentPage==='note') viewNote(editingId);
+}
+
+function deleteNote(id){
+  if(!confirm('Delete this note?')) return;
+  notes=notes.filter(n=>n.id!==id);
+  saveNotes();
+  refreshAll();
+  if(currentPage==='note') closeNote();
+  else if(currentSemPage) renderSemPage(currentSemPage);
+}
+
+/* ── Search ── */
+function globalSearch(val){
+  if(val.trim()){navigate('search');renderSearch(val.trim());}
+}
+
+function filterByTag(tag){
+  activeTagFilter=tag;
+  navigate('search');
+  renderSearch('');
+}
+
+function renderSearch(query){
+  let results=notes;
+  if(activeTagFilter){
+    results=results.filter(n=>n.tags.includes(activeTagFilter));
+    document.getElementById('active-tag-filter').innerHTML=`
+      <div class="active-filter">Tag: #${activeTagFilter}
+        <span onclick="clearTagFilter()">×</span>
+      </div>`;
+  } else {
+    document.getElementById('active-tag-filter').innerHTML='';
+  }
+  if(query){
+    const q=query.toLowerCase();
+    results=results.filter(n=>
+      n.title.toLowerCase().includes(q)||
+      n.content.toLowerCase().includes(q)||
+      n.subj.toLowerCase().includes(q)||
+      n.tags.some(t=>t.toLowerCase().includes(q))
+    );
+  }
+  document.getElementById('search-info').textContent=`${results.length} note${results.length!==1?'s':''} found${query?` for "${query}"`:''}`;
+  if(!results.length){
+    document.getElementById('search-results').innerHTML=`
+      <div class="no-results">
+        <div class="no-results-icon">📭</div>
+        <div style="font-size:15px;font-weight:600">No notes found</div>
+        <div style="font-size:13px;margin-top:4px">Try different keywords</div>
+      </div>`;
+    return;
+  }
+  document.getElementById('search-results').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
+      ${results.map(n=>noteCard(n)).join('')}
+    </div>`;
+  results.forEach(n=>loadBooks(n.id));
+}
+
+function clearTagFilter(){activeTagFilter=null;renderSearch('');}
+
+document.getElementById('global-search').addEventListener('input',e=>{
+  if(!e.target.value.trim()&&currentPage==='search') renderSearch('');
+  else if(e.target.value.trim()) globalSearch(e.target.value);
+});
+
+/* ── Copy Protection ── */
+function toggleCopyProtect(enabled){
+  copyProtect=enabled;
+  localStorage.setItem('cse-copy-protect', enabled?'1':'0');
+  document.getElementById('copy-protect-label').textContent='Copy Protection: '+(enabled?'ON':'OFF');
+  document.getElementById('copy-protect-footer').textContent=enabled?'🔒 Copy: OFF':'🔓 Copy: ON';
+  applyCopyProtect();
+}
+
+function applyCopyProtect(){
+  if(copyProtect){
+    document.addEventListener('copy', blockCopy);
+    document.addEventListener('cut', blockCopy);
+    document.addEventListener('contextmenu', blockContext);
+    document.body.style.userSelect='none';
+    document.body.style.webkitUserSelect='none';
+  } else {
+    document.removeEventListener('copy', blockCopy);
+    document.removeEventListener('cut', blockCopy);
+    document.removeEventListener('contextmenu', blockContext);
+    document.body.style.userSelect='';
+    document.body.style.webkitUserSelect='';
+  }
+}
+
+function blockCopy(e){
+  const sel = window.getSelection();
+  if(sel&&sel.toString().length>0){
+    e.preventDefault();
+    showCopyMsg();
+  }
+}
+
+function blockContext(e){
+  if(!e.target.closest('input, textarea, select')){
+    e.preventDefault();
+  }
+}
+
+function showCopyMsg(){
+  let msg=document.getElementById('copy-msg');
+  if(!msg){
+    msg=document.createElement('div');
+    msg.id='copy-msg';
+    msg.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#2c2a26;color:white;padding:10px 20px;border-radius:8px;font-size:13px;z-index:9999;font-family:Nunito,sans-serif;';
+    document.body.appendChild(msg);
+  }
+  msg.textContent='🔒 Copy protection is enabled';
+  msg.style.display='block';
+  setTimeout(()=>msg.style.display='none',2000);
+}
+
+/* ── Settings ── */
+function updateStorageInfo(){
+  const notesSize=new Blob([localStorage.getItem('cse-notes')||'']).size;
+  document.getElementById('storage-info').textContent=
+    `Notes: ~${fmtSize(notesSize)} in localStorage · Books: stored in IndexedDB (browser)`;
+}
+
+function setTheme(dark){
+  isDark=dark;
+  document.body.classList.toggle('dark',dark);
+  document.getElementById('dark-btn').textContent=dark?'☀️':'🌙';
+  localStorage.setItem('cse-dark',dark?'1':'0');
+  document.getElementById('theme-light').className='btn '+(dark?'btn-ghost':'btn-primary');
+  document.getElementById('theme-dark').className='btn '+(dark?'btn-primary':'btn-ghost');
+}
+
+function toggleDark(){setTheme(!isDark)}
+
+/* ── Init ── */
+function init(){
+  loadNotes();
+  buildSemNav();
+  buildSemPages();
+  buildAdvanced();
+  populateSemSelect();
+  refreshDashboard();
+  initDB();
+  const savedDark=localStorage.getItem('cse-dark');
+  if(savedDark==='1') setTheme(true);
+  const savedCopy=localStorage.getItem('cse-copy-protect');
+  if(savedCopy==='1'){
+    copyProtect=true;
+    document.getElementById('copy-protect-toggle').checked=true;
+    document.getElementById('copy-protect-label').textContent='Copy Protection: ON';
+    document.getElementById('copy-protect-footer').textContent='🔒 Copy: OFF';
+    applyCopyProtect();
+  }
+}
+
+init();
+</script>
+</body>
+</html>
